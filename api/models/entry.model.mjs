@@ -14,8 +14,12 @@ const entrySchema = mongoose.Schema(
       minlength: 1,
       maxlength: 1000,
     },
+    visibility: {
+      type: mongoose.Schema.Types.Boolean,
+      required: true,
+    }
   },
   { timestamps: true }
 );
 
-const Entry = mongoose.model("Entry", entrySchema);
+export const Entry = mongoose.model("Entry", entrySchema);

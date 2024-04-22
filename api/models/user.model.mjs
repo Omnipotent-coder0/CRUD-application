@@ -12,8 +12,6 @@ const userSchema = mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minlength: 6,
-      maxlength: 20,
     },
     displayName: {
       type: String,
@@ -25,10 +23,11 @@ const userSchema = mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Entry",
+        default: [],
       },
     ],
   },
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);

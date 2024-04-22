@@ -4,11 +4,7 @@ import entryRoutes from "./entry.routes.mjs";
 
 const router = Router();
 
-router.use(authRoutes);
-router.use(entryRoutes);
-
-router.get("/", (req, res) => {
-  return res.send({ hiiii: "hiiiiiii" });
-});
+router.use("/auth",authRoutes);
+router.use("/entry",entryRoutes);
 
 export default router;
