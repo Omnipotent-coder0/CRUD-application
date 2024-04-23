@@ -1,10 +1,13 @@
 import express from "express";
+import path from "path";
 import "dotenv/config";
 import cors from "cors";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import routes from "./routes/index.mjs";
 import { verifyToken } from "./utils/jwtToken.mjs";
+
+const __dirname = path.resolve();
 
 const port = process.env.PORT || 8080;
 const db_url = process.env.DB_URL;
@@ -21,8 +24,10 @@ app.use(express.json());
 app.use(verifyToken);
 app.use("/api", routes);
 
-app.get("/", (req, res) => {
-  return res.send({ hello: "world" });
+app.use(express.static(path.join(__dirname, "/client/dist")));
+
+app.get("*", (req, res) => {
+  return res.sendFile(path.join(__dirname, "/client/dist", "index.html"));
 });
 
 mongoose

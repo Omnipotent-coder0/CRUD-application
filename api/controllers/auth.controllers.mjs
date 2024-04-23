@@ -11,8 +11,6 @@ export const login = async (req, res) => {
     body: { username, password },
     userId,
   } = req;
-  if (userId)
-    return res.status(403).send({ error: "User is already logged in !" }); // forbidden
   if (!username || !password)
     return res
       .status(400)

@@ -11,7 +11,6 @@ export const createEntry = async (req, res) => {
   if (!result.isEmpty()) return res.status(400).send(result); // bad request
   const data = matchedData(req);
   const newEntry = new Entry(data);
-  console.log("new entry : ", newEntry);
   try {
     const findUser = await User.findById(userId.userId);
     if (!findUser)
