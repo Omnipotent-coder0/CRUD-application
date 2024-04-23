@@ -33,6 +33,7 @@ export const login = async (req, res) => {
         username: findUser.username,
         displayName: findUser.displayName,
         entries: findUser.entries,
+        _id: findUser._id,
       }); // ok
     }
   } catch (error) {
@@ -49,6 +50,8 @@ export const signup = async (req, res) => {
   const result = validationResult(req);
   if (!result.isEmpty()) return res.status(400).send(result); // bad request
   const data = matchedData(req);
+  const findUser = await User.findOne({ username: data.username });
+  if (findUser) return res.status(400).send({ error: "User already Exist!" });
   const newUser = new User(data);
   newUser.password = await bcrypt.hash(newUser.password, saltRounds);
   try {

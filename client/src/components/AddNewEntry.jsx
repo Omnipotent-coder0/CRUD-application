@@ -1,12 +1,39 @@
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { IoCreate } from "react-icons/io5";
+import axios from "axios";
+import toast from "react-hot-toast";
+
 const AddNewEntry = () => {
   const [open, setOpen] = useState(false);
-  const handleSubmit = () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const {
+      title: { value: title },
+      description: { value: description },
+      visibility: { value: visibility },
+    } = e.target;
+    const data = { title, description, visibility };
+    try {
+      const response = await axios.post("/api/entry", data);
+      if (response.status == 201) {
+        toast.success("Entry is successfully created !");
+        window.location.reload();
+      } else {
+        toast.error("Something went wrong !");
+        localStorage.clear();
+        setAuthUser(null);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      localStorage.clear();
+      setAuthUser(null);
+    }
+  };
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger className="w-64 h-[330px] text-white/50 hover:text-white duration-200 flex justify-center items-center bg-blu-400 rounded-xl bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-20 border border-gray-100">
+      <Dialog.Trigger className="w-64 h-[354px] text-white/50 hover:text-white duration-200 flex justify-center items-center bg-blu-400 rounded-xl bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-20 border border-gray-100">
         <IoCreate size={100} />
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -46,6 +73,27 @@ const AddNewEntry = () => {
                   id="description"
                   className="bg-black/50 outline-none  p-1 rounded-md text-sm font-normal font-mono w-full"
                 />
+              </div>
+              <div>
+                <label htmlFor="visibility">Visibility : </label>
+                <select
+                  name="visibility"
+                  id="visibility"
+                  className="bg-black/50 outline-none  p-1 rounded-md text-sm font-normal font-mono w-28 text-center"
+                >
+                  <option
+                    value={true}
+                    className="bg-blue-800/50 outline-none  p-1 rounded-md text-sm font-normal font-mono text-center"
+                  >
+                    Public 🔓
+                  </option>
+                  <option
+                    value={false}
+                    className="bg-green-600/50 outline-none  p-1 rounded-md text-sm font-normal font-mono text-center"
+                  >
+                    Private 🔒
+                  </option>
+                </select>
               </div>
               <div className="flex px-2 justify-around">
                 <button

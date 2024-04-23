@@ -1,10 +1,32 @@
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { MdDeleteForever } from "react-icons/md";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useAuthUser } from "../contexts/AuthUserContext";
 
 const CardDeleteDialog = ({ item }) => {
+  const { setAuthUser } = useAuthUser();
   const [open, setOpen] = useState(false);
-  const handleDelete = () => {};
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.delete(`/api/entry/${item._id}`);
+      if (response.status == 200) {
+        toast.success("Entry deleted successfully !");
+        window.location.reload();
+      } else {
+        toast.error("Something went wrong !");
+        localStorage.clear();
+        setAuthUser(null);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      localStorage.clear();
+      setAuthUser(null);
+    }
+  };
   return (
     <>
       <Dialog.Root open={open} onOpenChange={setOpen}>

@@ -1,9 +1,37 @@
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useAuthUser } from "../contexts/AuthUserContext";
 
 const CardEditDialog = ({ item }) => {
+  const { setAuthUser } = useAuthUser();
   const [open, setOpen] = useState(false);
-  const handleSubmit = (e) => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const {
+      title: { value: title },
+      description: { value: description },
+      visibility: { value: visibility },
+    } = e.target;
+    const data = { title, description, visibility };
+    try {
+      const response = await axios.put(`/api/entry/${item._id}`, data);
+      if (response.status == 200) {
+        toast.success("Entry is successfully Edited !");
+        window.location.reload();
+      } else {
+        toast.error("Something went wrong !");
+        localStorage.clear();
+        setAuthUser(null);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      localStorage.clear();
+      setAuthUser(null);
+    }
+  };
   return (
     <>
       <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -49,6 +77,28 @@ const CardEditDialog = ({ item }) => {
                     id="description"
                     className="bg-black/50 outline-none  p-1 rounded-md text-sm font-normal font-mono w-full"
                   />
+                </div>
+                <div>
+                  <label htmlFor="visibility">Visibility : </label>
+                  <select
+                    name="visibility"
+                    id="visibility"
+                    defaultValue={item.visibility}
+                    className="bg-black/50 outline-none  p-1 rounded-md text-sm font-normal font-mono w-28 text-center"
+                  >
+                    <option
+                      value={true}
+                      className="bg-blue-800/50 outline-none  p-1 rounded-md text-sm font-normal font-mono text-center"
+                    >
+                      Public 🔓
+                    </option>
+                    <option
+                      value={false}
+                      className="bg-green-600/50 outline-none  p-1 rounded-md text-sm font-normal font-mono text-center"
+                    >
+                      Private 🔒
+                    </option>
+                  </select>
                 </div>
                 <div className="flex px-2 justify-around">
                   <button
