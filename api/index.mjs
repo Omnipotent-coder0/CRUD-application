@@ -13,7 +13,7 @@ const port = process.env.PORT || 8080;
 const db_url = process.env.DB_URL;
 const app = express();
 const corsOptions = {
-  origin: process.env.CLIENT_URL,
+  origin: true,
   credentials: true,
 };
 
