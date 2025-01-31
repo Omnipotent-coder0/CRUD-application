@@ -3,7 +3,6 @@ import axios from "axios";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import Toaster from "react-hot-toast";
 import { BrowserRouter as Router } from "react-router-dom";
 import { AuthUserContextProvider } from "./contexts/AuthUserContext.jsx";
 
